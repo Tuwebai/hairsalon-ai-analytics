@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Core Colors */
+    --color-background: #FFFFFF; /* white */
+    --color-foreground: #1A1A1A; /* near-black */
+    --color-border: #E3F2FD; /* light-blue-50 */
+    --color-input: #FFFFFF; /* white */
+    --color-ring: #42A5F5; /* blue-400 */
+    
+    /* Card Colors */
+    --color-card: #F8FBFF; /* blue-tinted-white */
+    --color-card-foreground: #1A1A1A; /* near-black */
+    
+    /* Popover Colors */
+    --color-popover: #FFFFFF; /* white */
+    --color-popover-foreground: #1A1A1A; /* near-black */
+    
+    /* Muted Colors */
+    --color-muted: #E3F2FD; /* light-blue-50 */
+    --color-muted-foreground: #666666; /* gray-600 */
+    
+    /* Primary Colors */
+    --color-primary: #1565C0; /* blue-800 */
+    --color-primary-foreground: #FFFFFF; /* white */
+    
+    /* Secondary Colors */
+    --color-secondary: #42A5F5; /* blue-400 */
+    --color-secondary-foreground: #FFFFFF; /* white */
+    
+    /* Accent Colors */
+    --color-accent: #E3F2FD; /* light-blue-50 */
+    --color-accent-foreground: #1565C0; /* blue-800 */
+    
+    /* Success Colors */
+    --color-success: #4CAF50; /* green-500 */
+    --color-success-foreground: #FFFFFF; /* white */
+    
+    /* Warning Colors */
+    --color-warning: #FF9800; /* orange-500 */
+    --color-warning-foreground: #FFFFFF; /* white */
+    
+    /* Error/Destructive Colors */
+    --color-error: #F44336; /* red-500 */
+    --color-error-foreground: #FFFFFF; /* white */
+    --color-destructive: #F44336; /* red-500 */
+    --color-destructive-foreground: #FFFFFF; /* white */
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', sans-serif;
+  }
+
+  .font-data {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+@layer components {
+  .nav-shadow {
+    box-shadow: 0 2px 8px rgba(21, 101, 192, 0.08);
+  }
+  
+  .card-shadow {
+    box-shadow: 0 2px 8px rgba(21, 101, 192, 0.08);
+  }
+  
+  .modal-shadow {
+    box-shadow: 0 4px 16px rgba(21, 101, 192, 0.12);
+  }
+}
