@@ -79,9 +79,9 @@ const WeeklyCalendar = ({ currentDate, appointments, onAppointmentClick, onTimeS
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'confirmed': return 'bg-success text-white';
-      case 'pending': return 'bg-warning text-white';
-      case 'cancelled': return 'bg-error text-white';
+      case 'confirmed': return 'bg-success text-success-foreground';
+      case 'pending': return 'bg-warning text-warning-foreground';
+      case 'cancelled': return 'bg-error text-error-foreground';
       default: return 'bg-muted text-foreground';
     }
   };

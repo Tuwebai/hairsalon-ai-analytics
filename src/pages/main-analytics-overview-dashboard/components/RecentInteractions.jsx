@@ -4,10 +4,10 @@ import Icon from '../../../components/AppIcon';
 const RecentInteractions = ({ interactions, className = '' }) => {
   const getSentimentColor = (sentiment) => {
     switch (sentiment) {
-      case 'positive': return 'text-green-600 bg-green-100';
-      case 'negative': return 'text-red-600 bg-red-100';
-      case 'neutral': return 'text-gray-600 bg-gray-100';
-      default: return 'text-gray-600 bg-gray-100';
+      case 'positive': return 'text-success bg-success/10';
+      case 'negative': return 'text-error bg-error/10';
+      case 'neutral': return 'text-muted-foreground bg-muted/30';
+      default: return 'text-muted-foreground bg-muted/30';
     }
   };
 
@@ -22,10 +22,10 @@ const RecentInteractions = ({ interactions, className = '' }) => {
 
   const getOutcomeColor = (outcome) => {
     switch (outcome) {
-      case 'booked': return 'text-green-600 bg-green-100';
-      case 'interested': return 'text-blue-600 bg-blue-100';
-      case 'not_interested': return 'text-red-600 bg-red-100';
-      default: return 'text-gray-600 bg-gray-100';
+      case 'booked': return 'text-success bg-success/10';
+      case 'interested': return 'text-primary bg-primary/10';
+      case 'not_interested': return 'text-error bg-error/10';
+      default: return 'text-muted-foreground bg-muted/30';
     }
   };
 

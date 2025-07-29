@@ -107,7 +107,7 @@ const CalendarHeader = ({ currentDate, onDateChange, selectedFilters, onFiltersC
             <button
               onClick={() => setViewMode('day')}
               className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
-                viewMode === 'day' ?'bg-background text-foreground shadow-sm' :'text-muted-foreground hover:text-foreground'
+                viewMode === 'day' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
               }`}
             >
               Día
@@ -115,7 +115,7 @@ const CalendarHeader = ({ currentDate, onDateChange, selectedFilters, onFiltersC
             <button
               onClick={() => setViewMode('week')}
               className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
-                viewMode === 'week' ?'bg-background text-foreground shadow-sm' :'text-muted-foreground hover:text-foreground'
+                viewMode === 'week' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
               }`}
             >
               Semana

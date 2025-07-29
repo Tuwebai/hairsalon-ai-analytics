@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Theme</title>
+    <style>
+        /* CSS Variables for Theme System */
+        :root {
+            /* Light Theme - Modern Gradients */
+            --bg-primary: #ffffff;
+            --bg-secondary: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            --bg-tertiary: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            --bg-card: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            --bg-accent: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            --bg-muted: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --text-accent: #3b82f6;
+            
+            --border-primary: #e2e8f0;
+            --border-secondary: #cbd5e1;
+            --border-accent: #3b82f6;
+            
+            --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            --gradient-secondary: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+            --gradient-button: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            --gradient-button-hover: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            
+            --success-light: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+            --success-dark: #16a34a;
+            --warning-light: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            --warning-dark: #d97706;
+            --error-light: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            --error-dark: #dc2626;
+            --info-light: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            --info-dark: #2563eb;
+        }
+
+        /* Dark Theme - Modern Dark Gray with Blue Gradients */
+        [data-theme="dark"] {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            --bg-tertiary: linear-gradient(135deg, #2d2d2d 0%, #404040 100%);
+            --bg-card: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            --bg-accent: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+            --bg-muted: linear-gradient(135deg, #2d2d2d 0%, #404040 100%);
+            
+            --text-primary: #ffffff;
+            --text-secondary: #e5e5e5;
+            --text-muted: #a3a3a3;
+            --text-accent: #60a5fa;
+            
+            --border-primary: #404040;
+            --border-secondary: #525252;
+            --border-accent: #3b82f6;
+            
+            --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            --gradient-secondary: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+            --gradient-button: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            --gradient-button-hover: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            
+            --success-light: linear-gradient(135deg, #065f46 0%, #047857 100%);
+            --success-dark: #22c55e;
+            --warning-light: linear-gradient(135deg, #92400e 0%, #b45309 100%);
+            --warning-dark: #f59e0b;
+            --error-light: linear-gradient(135deg, #991b1b 0%, #b91c1c 100%);
+            --error-dark: #ef4444;
+            --info-light: linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%);
+            --info-dark: #3b82f6;
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: 0.75rem;
+            padding: 20px;
+            margin: 10px 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn {
+            background: var(--gradient-button);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: var(--gradient-button-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .status-success {
+            background: var(--success-light);
+            color: var(--success-dark);
+            padding: 10px;
+            border-radius: 0.5rem;
+            margin: 5px 0;
+            font-weight: 500;
+        }
+
+        .status-warning {
+            background: var(--warning-light);
+            color: var(--warning-dark);
+            padding: 10px;
+            border-radius: 0.5rem;
+            margin: 5px 0;
+            font-weight: 500;
+        }
+
+        .status-error {
+            background: var(--error-light);
+            color: var(--error-dark);
+            padding: 10px;
+            border-radius: 0.5rem;
+            margin: 5px 0;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test del Sistema de Temas</h1>
+    
+    <div class="card">
+        <h2>Controles</h2>
+        <button class="btn" onclick="setTheme('light')">Modo Claro</button>
+        <button class="btn" onclick="setTheme('dark')">Modo Oscuro</button>
+        <button class="btn" onclick="toggleTheme()">Alternar Tema</button>
+    </div>
+
+    <div class="card">
+        <h2>Estados de Citas</h2>
+        <div class="status-success">✅ Confirmada</div>
+        <div class="status-warning">⏰ Pendiente</div>
+        <div class="status-error">❌ Cancelada</div>
+    </div>
+
+    <div class="card">
+        <h2>Filtros de Fecha</h2>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button class="btn" style="background: var(--gradient-button);">Hoy</button>
+            <button class="btn" style="background: var(--bg-secondary); color: var(--text-primary);">Esta Semana</button>
+            <button class="btn" style="background: var(--bg-secondary); color: var(--text-primary);">Este Mes</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Información del Tema</h2>
+        <p><strong>Tema actual:</strong> <span id="current-theme">claro</span></p>
+        <p><strong>Color de fondo:</strong> <span id="bg-color">-</span></p>
+        <p><strong>Color de texto:</strong> <span id="text-color">-</span></p>
+    </div>
+
+    <script>
+        let currentTheme = 'light';
+
+        function setTheme(theme) {
+            currentTheme = theme;
+            document.documentElement.setAttribute('data-theme', theme);
+            updateInfo();
+        }
+
+        function toggleTheme() {
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            setTheme(newTheme);
+        }
+
+        function updateInfo() {
+            document.getElementById('current-theme').textContent = currentTheme;
+            document.getElementById('bg-color').textContent = getComputedStyle(document.body).backgroundColor;
+            document.getElementById('text-color').textContent = getComputedStyle(document.body).color;
+        }
+
+        // Inicializar
+        updateInfo();
+    </script>
+</body>
+</html> 

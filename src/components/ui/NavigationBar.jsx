@@ -5,11 +5,13 @@ import NavigationItem from './NavigationItem';
 import MobileNavigationToggle from './MobileNavigationToggle';
 import ThemeToggle from './ThemeToggle';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useAuth } from '../../contexts/AuthContext';
 
 const NavigationBar = ({ currentUser, onLogout, className = '' }) => {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { theme } = useTheme();
+  const { user, logout } = useAuth();
 
   const menuItems = [
     {
@@ -67,13 +69,23 @@ const NavigationBar = ({ currentUser, onLogout, className = '' }) => {
           {/* User Section and Theme Toggle */}
           <div className="hidden md:flex items-center space-x-4">
             <ThemeToggle />
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center">
-                <Icon name="User" size={16} color="white" />
+            <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center">
+                  <Icon name="User" size={16} color="white" />
+                </div>
+                <span className="text-sm font-medium text-foreground">
+                  {user?.username || currentUser?.name || 'Usuario'}
+                </span>
               </div>
-              <span className="text-sm font-medium text-foreground">
-                {currentUser?.name || 'Usuario'}
-              </span>
+              <button
+                onClick={logout}
+                className="flex items-center space-x-1 px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-accent/10 rounded-lg transition-all duration-200"
+                title="Cerrar sesión"
+              >
+                <Icon name="LogOut" size={16} />
+                <span className="hidden lg:inline">Salir</span>
+              </button>
             </div>
           </div>
 

@@ -6,50 +6,88 @@
 
 @layer base {
   :root {
-    /* Core Colors */
-    --color-background: #FFFFFF; /* white */
-    --color-foreground: #1A1A1A; /* near-black */
-    --color-border: #E3F2FD; /* light-blue-50 */
-    --color-input: #FFFFFF; /* white */
-    --color-ring: #42A5F5; /* blue-400 */
+    /* Core Colors - Light Theme */
+    --color-background: var(--bg-primary);
+    --color-foreground: var(--text-primary);
+    --color-border: var(--border-primary);
+    --color-input: var(--bg-card);
+    --color-ring: var(--border-accent);
     
     /* Card Colors */
-    --color-card: #F8FBFF; /* blue-tinted-white */
-    --color-card-foreground: #1A1A1A; /* near-black */
+    --color-card: var(--bg-card);
+    --color-card-foreground: var(--text-primary);
     
     /* Popover Colors */
-    --color-popover: #FFFFFF; /* white */
-    --color-popover-foreground: #1A1A1A; /* near-black */
+    --color-popover: var(--bg-card);
+    --color-popover-foreground: var(--text-primary);
     
     /* Muted Colors */
-    --color-muted: #E3F2FD; /* light-blue-50 */
-    --color-muted-foreground: #666666; /* gray-600 */
+    --color-muted: var(--bg-muted);
+    --color-muted-foreground: var(--text-muted);
     
     /* Primary Colors */
-    --color-primary: #1565C0; /* blue-800 */
-    --color-primary-foreground: #FFFFFF; /* white */
+    --color-primary: var(--text-accent);
+    --color-primary-foreground: white;
     
     /* Secondary Colors */
-    --color-secondary: #42A5F5; /* blue-400 */
-    --color-secondary-foreground: #FFFFFF; /* white */
+    --color-secondary: var(--bg-secondary);
+    --color-secondary-foreground: var(--text-primary);
     
     /* Accent Colors */
-    --color-accent: #E3F2FD; /* light-blue-50 */
-    --color-accent-foreground: #1565C0; /* blue-800 */
+    --color-accent: var(--bg-accent);
+    --color-accent-foreground: var(--text-primary);
     
     /* Success Colors */
-    --color-success: #4CAF50; /* green-500 */
-    --color-success-foreground: #FFFFFF; /* white */
+    --color-success: var(--success-dark);
+    --color-success-foreground: white;
     
     /* Warning Colors */
-    --color-warning: #FF9800; /* orange-500 */
-    --color-warning-foreground: #FFFFFF; /* white */
+    --color-warning: var(--warning-dark);
+    --color-warning-foreground: white;
     
     /* Error/Destructive Colors */
-    --color-error: #F44336; /* red-500 */
-    --color-error-foreground: #FFFFFF; /* white */
-    --color-destructive: #F44336; /* red-500 */
-    --color-destructive-foreground: #FFFFFF; /* white */
+    --color-error: var(--error-dark);
+    --color-error-foreground: white;
+    --color-destructive: var(--error-dark);
+    --color-destructive-foreground: white;
+  }
+
+  /* Dark Theme Variables */
+  [data-theme="dark"] {
+    --color-background: var(--bg-primary);
+    --color-foreground: var(--text-primary);
+    --color-border: var(--border-primary);
+    --color-input: var(--bg-card);
+    --color-ring: var(--border-accent);
+    
+    --color-card: var(--bg-card);
+    --color-card-foreground: var(--text-primary);
+    
+    --color-popover: var(--bg-card);
+    --color-popover-foreground: var(--text-primary);
+    
+    --color-muted: var(--bg-muted);
+    --color-muted-foreground: var(--text-muted);
+    
+    --color-primary: var(--text-accent);
+    --color-primary-foreground: white;
+    
+    --color-secondary: var(--bg-secondary);
+    --color-secondary-foreground: var(--text-primary);
+    
+    --color-accent: var(--bg-accent);
+    --color-accent-foreground: var(--text-primary);
+    
+    --color-success: var(--success-dark);
+    --color-success-foreground: white;
+    
+    --color-warning: var(--warning-dark);
+    --color-warning-foreground: white;
+    
+    --color-error: var(--error-dark);
+    --color-error-foreground: white;
+    --color-destructive: var(--error-dark);
+    --color-destructive-foreground: white;
   }
 
   * {

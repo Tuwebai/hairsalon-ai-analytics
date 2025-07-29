@@ -26,12 +26,20 @@ export const ThemeProvider = ({ children }) => {
     return 'light';
   });
 
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
   useEffect(() => {
     // Save theme to localStorage
     localStorage.setItem('theme', theme);
     
-    // Apply theme to document
+    // Apply theme to document with smooth transition
     const root = document.documentElement;
+    
+    // Add transition class for smooth theme change
+    root.classList.add('theme-transitioning');
+    setIsTransitioning(true);
+    
+    // Apply theme
     root.setAttribute('data-theme', theme);
     
     // Update CSS custom properties
@@ -42,6 +50,12 @@ export const ThemeProvider = ({ children }) => {
       root.classList.add('light');
       root.classList.remove('dark');
     }
+    
+    // Remove transition class after animation completes
+    setTimeout(() => {
+      root.classList.remove('theme-transitioning');
+      setIsTransitioning(false);
+    }, 400);
   }, [theme]);
 
   const toggleTheme = () => {
@@ -51,7 +65,8 @@ export const ThemeProvider = ({ children }) => {
   const value = {
     theme,
     toggleTheme,
-    isDark: theme === 'dark'
+    isDark: theme === 'dark',
+    isTransitioning
   };
 
   return (

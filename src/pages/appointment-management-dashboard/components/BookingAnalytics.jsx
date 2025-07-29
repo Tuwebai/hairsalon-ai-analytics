@@ -63,26 +63,67 @@ const BookingAnalytics = () => {
         return (
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={data}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#E3F2FD" />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--border-primary)" />
               <XAxis 
                 dataKey={timeRange === 'week' ? 'day' : 'hour'} 
-                stroke="#666666"
+                stroke="var(--text-muted)"
                 fontSize={12}
               />
-              <YAxis stroke="#666666" fontSize={12} />
+              <YAxis stroke="var(--text-muted)" fontSize={12} />
               <Tooltip 
                 contentStyle={{ 
-                  backgroundColor: '#FFFFFF', 
-                  border: '1px solid #E3F2FD',
-                  borderRadius: '8px'
+                  backgroundColor: 'var(--bg-card)', 
+                  border: '1px solid var(--border-primary)',
+                  borderRadius: '8px',
+                  color: 'var(--text-primary)'
                 }}
               />
+              <defs>
+                {/* Modern Line Gradient with Fade */}
+                <linearGradient id="bookingsLineGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#6366f1" stopOpacity={1}/>
+                  <stop offset="30%" stopColor="#8b5cf6" stopOpacity={0.8}/>
+                  <stop offset="60%" stopColor="#a855f7" stopOpacity={0.6}/>
+                  <stop offset="85%" stopColor="#c084fc" stopOpacity={0.4}/>
+                  <stop offset="100%" stopColor="#e879f9" stopOpacity={0.2}/>
+                </linearGradient>
+                
+                {/* Modern Area Gradient with Enhanced Fade */}
+                <linearGradient id="colorBookings" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#6366f1" stopOpacity={0.8}/>
+                  <stop offset="25%" stopColor="#8b5cf6" stopOpacity={0.5}/>
+                  <stop offset="50%" stopColor="#a855f7" stopOpacity={0.3}/>
+                  <stop offset="75%" stopColor="#c084fc" stopOpacity={0.15}/>
+                  <stop offset="100%" stopColor="#e879f9" stopOpacity={0.05}/>
+                </linearGradient>
+                
+                {/* Modern Bar Gradient */}
+                <linearGradient id="bookingsBarGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#6366f1" stopOpacity={1}/>
+                  <stop offset="25%" stopColor="#8b5cf6" stopOpacity={0.9}/>
+                  <stop offset="50%" stopColor="#a855f7" stopOpacity={0.8}/>
+                  <stop offset="75%" stopColor="#c084fc" stopOpacity={0.7}/>
+                  <stop offset="100%" stopColor="#e879f9" stopOpacity={0.6}/>
+                </linearGradient>
+              </defs>
+              {/* Background Area for Line/Area Effect */}
+              <Area 
+                type="monotone" 
+                dataKey="bookings" 
+                stroke="none"
+                fill="url(#colorBookings)"
+              />
+              
+              {/* Line on top of area */}
               <Line 
                 type="monotone" 
                 dataKey="bookings" 
-                stroke="#1565C0" 
-                strokeWidth={3}
-                dot={{ fill: '#1565C0', strokeWidth: 2, r: 4 }}
+                stroke="url(#bookingsLineGradient)" 
+                strokeWidth={4}
+                dot={false}
+                activeDot={false}
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
             </LineChart>
           </ResponsiveContainer>
@@ -92,33 +133,28 @@ const BookingAnalytics = () => {
         return (
           <ResponsiveContainer width="100%" height={300}>
             <AreaChart data={data}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#E3F2FD" />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--border-primary)" />
               <XAxis 
                 dataKey={timeRange === 'week' ? 'day' : 'hour'} 
-                stroke="#666666"
+                stroke="var(--text-muted)"
                 fontSize={12}
               />
-              <YAxis stroke="#666666" fontSize={12} />
+              <YAxis stroke="var(--text-muted)" fontSize={12} />
               <Tooltip 
                 contentStyle={{ 
-                  backgroundColor: '#FFFFFF', 
-                  border: '1px solid #E3F2FD',
-                  borderRadius: '8px'
+                  backgroundColor: 'var(--bg-card)', 
+                  border: '1px solid var(--border-primary)',
+                  borderRadius: '8px',
+                  color: 'var(--text-primary)'
                 }}
-              />
-              <Area 
-                type="monotone" 
-                dataKey="bookings" 
-                stroke="#1565C0" 
-                fill="url(#colorBookings)"
-                strokeWidth={2}
               />
               <defs>
                 <linearGradient id="colorBookings" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#1565C0" stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor="#1565C0" stopOpacity={0.1}/>
+                  <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.6}/>
+                  <stop offset="95%" stopColor="#1d4ed8" stopOpacity={0.2}/>
                 </linearGradient>
               </defs>
+
             </AreaChart>
           </ResponsiveContainer>
         );
@@ -141,7 +177,14 @@ const BookingAnalytics = () => {
                   <Cell key={`cell-${index}`} fill={entry.color} />
                 ))}
               </Pie>
-              <Tooltip />
+              <Tooltip 
+                contentStyle={{ 
+                  backgroundColor: 'var(--bg-card)', 
+                  border: '1px solid var(--border-primary)',
+                  borderRadius: '8px',
+                  color: 'var(--text-primary)'
+                }}
+              />
             </PieChart>
           </ResponsiveContainer>
         );
@@ -150,24 +193,31 @@ const BookingAnalytics = () => {
         return (
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={data}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#E3F2FD" />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--border-primary)" />
               <XAxis 
                 dataKey={timeRange === 'week' ? 'day' : 'hour'} 
-                stroke="#666666"
+                stroke="var(--text-muted)"
                 fontSize={12}
               />
-              <YAxis stroke="#666666" fontSize={12} />
+              <YAxis stroke="var(--text-muted)" fontSize={12} />
               <Tooltip 
                 contentStyle={{ 
-                  backgroundColor: '#FFFFFF', 
-                  border: '1px solid #E3F2FD',
-                  borderRadius: '8px'
+                  backgroundColor: 'var(--bg-card)', 
+                  border: '1px solid var(--border-primary)',
+                  borderRadius: '8px',
+                  color: 'var(--text-primary)'
                 }}
               />
+              <defs>
+                <linearGradient id="bookingsBarGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.9}/>
+                  <stop offset="95%" stopColor="#1d4ed8" stopOpacity={0.7}/>
+                </linearGradient>
+              </defs>
               <Bar 
                 dataKey="bookings" 
-                fill="#1565C0"
-                radius={[4, 4, 0, 0]}
+                fill="url(#bookingsBarGradient)"
+                radius={[12, 12, 0, 0]}
               />
             </BarChart>
           </ResponsiveContainer>

@@ -56,8 +56,8 @@ const DateRangePicker = ({ selectedRange, onRangeChange, className = '' }) => {
                   onClick={() => handlePresetSelect(preset)}
                   className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${
                     selectedRange === preset.value
-                      ? 'bg-accent text-accent-foreground'
-                      : 'hover:bg-accent/50'
+                      ? 'bg-primary text-primary-foreground'
+                      : 'hover:bg-accent/50 text-foreground'
                   }`}
                 >
                   {preset.label}

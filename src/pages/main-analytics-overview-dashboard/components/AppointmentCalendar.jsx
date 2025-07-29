@@ -14,10 +14,10 @@ const AppointmentCalendar = ({
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'confirmed': return 'bg-green-100 text-green-800 border-green-200';
-      case 'pending': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'cancelled': return 'bg-red-100 text-red-800 border-red-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+      case 'confirmed': return 'bg-success/10 text-success border-success/20';
+      case 'pending': return 'bg-warning/10 text-warning border-warning/20';
+      case 'cancelled': return 'bg-error/10 text-error border-error/20';
+      default: return 'bg-muted/30 text-muted-foreground border-muted/50';
     }
   };
 

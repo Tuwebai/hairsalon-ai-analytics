@@ -8,18 +8,23 @@ import MainChart from './components/MainChart';
 import AppointmentCalendar from './components/AppointmentCalendar';
 import RecentInteractions from './components/RecentInteractions';
 import ExportControls from './components/ExportControls';
+import NotificationToast from '../../components/ui/NotificationToast';
+import ParticleBackground from '../../components/ui/ParticleBackground';
+import { useAuth } from '../../contexts/AuthContext';
 import Icon from '../../components/AppIcon';
 
 const MainAnalyticsOverviewDashboard = () => {
   const [selectedRange, setSelectedRange] = useState('today');
   const [chartType, setChartType] = useState('line');
   const [realTimeEnabled, setRealTimeEnabled] = useState(true);
+  const [notification, setNotification] = useState({ isVisible: false, message: '', type: 'info' });
   const navigate = useNavigate();
+  const { user } = useAuth();
 
-  // Mock current user
+  // Current user from auth context
   const currentUser = {
-    name: "María González",
-    role: "Administradora"
+    name: user?.username || "Usuario",
+    role: user?.role || "Administrador"
   };
 
   // Generate live message count based on selected range
@@ -300,11 +305,20 @@ const MainAnalyticsOverviewDashboard = () => {
 
   const handleRangeChange = (range, customDates = null) => {
     setSelectedRange(range);
-    console.log('Date range changed:', range, customDates);
+    showNotification(`Filtro actualizado a: ${range === 'today' ? 'Hoy' : range === 'week' ? 'Esta semana' : 'Este mes'}`, 'info');
   };
 
   const handleChartTypeChange = (type) => {
     setChartType(type);
+    showNotification(`Tipo de gráfico cambiado a: ${type === 'line' ? 'Línea' : type === 'area' ? 'Área' : 'Barras'}`, 'info');
+  };
+
+  const showNotification = (message, type = 'info') => {
+    setNotification({ isVisible: true, message, type });
+  };
+
+  const hideNotification = () => {
+    setNotification({ isVisible: false, message: '', type: 'info' });
   };
 
   const handleExport = async (format) => {
@@ -327,7 +341,8 @@ const MainAnalyticsOverviewDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
+    <div className="min-h-screen relative" style={{ background: 'var(--bg-primary)' }}>
+      <ParticleBackground particleCount={15} />
       <NavigationBar currentUser={currentUser} />
       
       <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-8">
@@ -395,6 +410,7 @@ const MainAnalyticsOverviewDashboard = () => {
               color={kpi.color}
               suffix={kpi.suffix}
               isLive={kpi.isLive}
+              delay={index}
             />
           ))}
         </div>
@@ -428,6 +444,15 @@ const MainAnalyticsOverviewDashboard = () => {
 
         {/* Footer Stats - Removed staff utilization and other unwanted metrics */}
         <div className="card p-4 sm:p-6">
+          
+          {/* Notification Toast */}
+          <NotificationToast
+            message={notification.message}
+            type={notification.type}
+            isVisible={notification.isVisible}
+            onClose={hideNotification}
+            duration={3000}
+          />
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div className="text-center">
               <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-lg mx-auto mb-2 sm:mb-3" style={{ background: 'var(--info-light)' }}>

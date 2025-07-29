@@ -177,9 +177,24 @@ const AppointmentDetails = ({ selectedAppointment, onClose, onSave }) => {
 
   if (!selectedAppointment) {
     return (
-      <div className="bg-card rounded-lg p-4 sm:p-6 card-shadow">
-        <div className="text-center py-6 sm:py-8">
-          <Icon name="Calendar" size={40} className="sm:w-12 sm:h-12 text-muted-foreground mx-auto mb-4" />
+      <div className="card p-4 sm:p-6 card-hover relative overflow-hidden">
+        {/* Gradient overlay */}
+        <div 
+          className="absolute inset-0 opacity-5"
+          style={{ 
+            background: `linear-gradient(135deg, var(--text-accent) 0%, transparent 100%)`,
+            pointerEvents: 'none'
+          }}
+        />
+        
+        <div className="relative z-10 text-center py-6 sm:py-8">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-xl shadow-lg flex items-center justify-center"
+               style={{
+                 background: 'linear-gradient(135deg, var(--bg-accent) 0%, var(--text-accent)20 100%)',
+                 border: '1px solid var(--text-accent)30'
+               }}>
+            <Icon name="Calendar" size={40} className="sm:w-12 sm:h-12 text-muted-foreground" />
+          </div>
           <h3 className="text-base sm:text-lg font-medium text-foreground mb-2">
             Selecciona una Cita
           </h3>
@@ -192,261 +207,272 @@ const AppointmentDetails = ({ selectedAppointment, onClose, onSave }) => {
   }
 
   return (
-    <div className="bg-card rounded-lg card-shadow overflow-hidden">
-      {/* Header */}
-      <div className="p-3 sm:p-4 border-b border-border">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-          <h3 className="text-base sm:text-lg font-semibold text-foreground">
-            Detalles de la Cita
-          </h3>
-          <div className="flex items-center space-x-2">
-            {!isEditing ? (
+    <div className="card overflow-hidden relative">
+      {/* Gradient overlay */}
+      <div 
+        className="absolute inset-0 opacity-5"
+        style={{ 
+          background: `linear-gradient(135deg, var(--text-accent) 0%, transparent 100%)`,
+          pointerEvents: 'none'
+        }}
+      />
+      
+      <div className="relative z-10">
+        {/* Header */}
+        <div className="p-3 sm:p-4 border-b border-border">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <h3 className="text-base sm:text-lg font-semibold text-foreground">
+              Detalles de la Cita
+            </h3>
+            <div className="flex items-center space-x-2">
+              {!isEditing ? (
+                <>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    iconName="Edit"
+                    onClick={() => setIsEditing(true)}
+                    className="text-xs"
+                  >
+                    Editar
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    iconName="X"
+                    onClick={onClose}
+                    className="text-xs"
+                  />
+                </>
+              ) : (
+                <>
+                  <Button
+                    variant="default"
+                    size="sm"
+                    iconName="Check"
+                    onClick={handleSave}
+                    className="text-xs"
+                  >
+                    Guardar
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    iconName="X"
+                    onClick={handleCancel}
+                    className="text-xs"
+                  >
+                    Cancelar
+                  </Button>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="p-3 sm:p-4 space-y-4 sm:space-y-6">
+          {/* Appointment Info */}
+          <div className="space-y-4">
+            {isEditing ? (
               <>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  iconName="Edit"
-                  onClick={() => setIsEditing(true)}
-                  className="text-xs"
-                >
-                  Editar
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  iconName="X"
-                  onClick={onClose}
-                  className="text-xs"
+                <Input
+                  label="Nombre del Cliente"
+                  value={formData.customerName}
+                  onChange={(e) => handleInputChange('customerName', e.target.value)}
+                  placeholder="Nombre completo"
+                />
+                
+                <Input
+                  label="Teléfono"
+                  value={formData.phone}
+                  onChange={(e) => handleInputChange('phone', e.target.value)}
+                  placeholder="+34 xxx xxx xxx"
+                />
+
+                <Input
+                  label="Email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => handleInputChange('email', e.target.value)}
+                  placeholder="email@ejemplo.com"
+                />
+                
+                <Select
+                  label="Servicio"
+                  options={serviceOptions}
+                  value={formData.service}
+                  onChange={(value) => handleInputChange('service', value)}
+                />
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <Input
+                    label="Fecha"
+                    type="date"
+                    value={formData.date}
+                    onChange={(e) => handleInputChange('date', e.target.value)}
+                  />
+                  <Input
+                    label="Hora"
+                    type="time"
+                    value={formData.time}
+                    onChange={(e) => handleInputChange('time', e.target.value)}
+                  />
+                </div>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <Input
+                    label="Duración (minutos)"
+                    type="number"
+                    value={formData.duration}
+                    onChange={(e) => handleInputChange('duration', parseInt(e.target.value))}
+                    min="15"
+                    max="300"
+                  />
+                  <Select
+                    label="Personal"
+                    options={staffOptions}
+                    value={formData.staff}
+                    onChange={(value) => handleInputChange('staff', value)}
+                  />
+                </div>
+                
+                <Select
+                  label="Estado"
+                  options={statusOptions}
+                  value={formData.status}
+                  onChange={(value) => handleInputChange('status', value)}
+                />
+                
+                <Input
+                  label="Notas"
+                  value={formData.notes}
+                  onChange={(e) => handleInputChange('notes', e.target.value)}
+                  placeholder="Notas adicionales..."
                 />
               </>
             ) : (
               <>
-                <Button
-                  variant="default"
-                  size="sm"
-                  iconName="Check"
-                  onClick={handleSave}
-                  className="text-xs"
-                >
-                  Guardar
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  iconName="X"
-                  onClick={handleCancel}
-                  className="text-xs"
-                >
-                  Cancelar
-                </Button>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                  <h4 className="text-lg sm:text-xl font-semibold text-foreground">
+                    {selectedAppointment.customerName}
+                  </h4>
+                  <span className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${getStatusColor(selectedAppointment.status)}`}>
+                    {getStatusLabel(selectedAppointment.status)}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 gap-3">
+                  <div className="flex items-center space-x-2">
+                    <Icon name="Phone" size={14} className="sm:w-4 sm:h-4 text-muted-foreground" />
+                    <span className="text-xs sm:text-sm text-foreground">{selectedAppointment.phone}</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Icon name="Mail" size={14} className="sm:w-4 sm:h-4 text-muted-foreground" />
+                    <span className="text-xs sm:text-sm text-foreground">{selectedAppointment.email}</span>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Servicio</p>
+                    <p className="text-sm sm:text-base font-medium text-foreground">{selectedAppointment.service}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Personal</p>
+                    <p className="text-sm sm:text-base font-medium text-foreground">{selectedAppointment.staff}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Fecha y Hora</p>
+                    <p className="text-sm sm:text-base font-medium text-foreground">
+                      {selectedAppointment.time} - {selectedAppointment.duration}min
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Fuente</p>
+                    <div className="flex items-center space-x-2">
+                      <Icon 
+                        name={selectedAppointment.source === 'ai' ? 'Bot' : 'Phone'} 
+                        size={14} 
+                        className="sm:w-4 sm:h-4 text-muted-foreground" 
+                      />
+                      <span className="text-sm sm:text-base font-medium text-foreground">
+                        {selectedAppointment.source === 'ai' ? 'IA Chatbot' : 'Teléfono'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {selectedAppointment.notes && (
+                  <div>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Notas</p>
+                    <p className="text-xs sm:text-sm text-foreground">{selectedAppointment.notes}</p>
+                  </div>
+                )}
               </>
             )}
           </div>
-        </div>
-      </div>
 
-      <div className="p-3 sm:p-4 space-y-4 sm:space-y-6">
-        {/* Appointment Info */}
-        <div className="space-y-4">
-          {isEditing ? (
-            <>
-              <Input
-                label="Nombre del Cliente"
-                value={formData.customerName}
-                onChange={(e) => handleInputChange('customerName', e.target.value)}
-                placeholder="Nombre completo"
-              />
-              
-              <Input
-                label="Teléfono"
-                value={formData.phone}
-                onChange={(e) => handleInputChange('phone', e.target.value)}
-                placeholder="+34 xxx xxx xxx"
-              />
+          {/* Quick Actions */}
+          {!isEditing && (
+            <div className="flex flex-wrap gap-2 pt-4 border-t border-border">
+              <Button variant="success" size="sm" iconName="Check" onClick={handleConfirmAppointment} className="text-xs">
+                Confirmar
+              </Button>
+              <Button variant="warning" size="sm" iconName="Clock" onClick={handleReschedule} className="text-xs">
+                Reprogramar
+              </Button>
+              <Button variant="outline" size="sm" iconName="MessageSquare" onClick={handleSendSMS} className="text-xs">
+                Enviar SMS
+              </Button>
+              <Button variant="outline" size="sm" iconName="Phone" onClick={handleCall} className="text-xs">
+                Llamar
+              </Button>
+              <Button variant="destructive" size="sm" iconName="X" onClick={handleCancelAppointment} className="text-xs">
+                Cancelar
+              </Button>
+            </div>
+          )}
 
-              <Input
-                label="Email"
-                type="email"
-                value={formData.email}
-                onChange={(e) => handleInputChange('email', e.target.value)}
-                placeholder="email@ejemplo.com"
-              />
-              
-              <Select
-                label="Servicio"
-                options={serviceOptions}
-                value={formData.service}
-                onChange={(value) => handleInputChange('service', value)}
-              />
-              
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Input
-                  label="Fecha"
-                  type="date"
-                  value={formData.date}
-                  onChange={(e) => handleInputChange('date', e.target.value)}
-                />
-                <Input
-                  label="Hora"
-                  type="time"
-                  value={formData.time}
-                  onChange={(e) => handleInputChange('time', e.target.value)}
-                />
-              </div>
-              
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Input
-                  label="Duración (minutos)"
-                  type="number"
-                  value={formData.duration}
-                  onChange={(e) => handleInputChange('duration', parseInt(e.target.value))}
-                  min="15"
-                  max="300"
-                />
-                <Select
-                  label="Personal"
-                  options={staffOptions}
-                  value={formData.staff}
-                  onChange={(value) => handleInputChange('staff', value)}
-                />
-              </div>
-              
-              <Select
-                label="Estado"
-                options={statusOptions}
-                value={formData.status}
-                onChange={(value) => handleInputChange('status', value)}
-              />
-              
-              <Input
-                label="Notas"
-                value={formData.notes}
-                onChange={(e) => handleInputChange('notes', e.target.value)}
-                placeholder="Notas adicionales..."
-              />
-            </>
-          ) : (
-            <>
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                <h4 className="text-lg sm:text-xl font-semibold text-foreground">
-                  {selectedAppointment.customerName}
-                </h4>
-                <span className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${getStatusColor(selectedAppointment.status)}`}>
-                  {getStatusLabel(selectedAppointment.status)}
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 gap-3">
-                <div className="flex items-center space-x-2">
-                  <Icon name="Phone" size={14} className="sm:w-4 sm:h-4 text-muted-foreground" />
-                  <span className="text-xs sm:text-sm text-foreground">{selectedAppointment.phone}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Icon name="Mail" size={14} className="sm:w-4 sm:h-4 text-muted-foreground" />
-                  <span className="text-xs sm:text-sm text-foreground">{selectedAppointment.email}</span>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <p className="text-xs sm:text-sm text-muted-foreground">Servicio</p>
-                  <p className="text-sm sm:text-base font-medium text-foreground">{selectedAppointment.service}</p>
-                </div>
-                <div>
-                  <p className="text-xs sm:text-sm text-muted-foreground">Personal</p>
-                  <p className="text-sm sm:text-base font-medium text-foreground">{selectedAppointment.staff}</p>
-                </div>
-                <div>
-                  <p className="text-xs sm:text-sm text-muted-foreground">Fecha y Hora</p>
-                  <p className="text-sm sm:text-base font-medium text-foreground">
-                    {selectedAppointment.time} - {selectedAppointment.duration}min
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs sm:text-sm text-muted-foreground">Fuente</p>
-                  <div className="flex items-center space-x-2">
-                    <Icon 
-                      name={selectedAppointment.source === 'ai' ? 'Bot' : 'Phone'} 
-                      size={14} 
-                      className="sm:w-4 sm:h-4 text-muted-foreground" 
-                    />
-                    <span className="text-sm sm:text-base font-medium text-foreground">
-                      {selectedAppointment.source === 'ai' ? 'IA Chatbot' : 'Teléfono'}
-                    </span>
+          {/* Customer History */}
+          {!isEditing && (
+            <div className="pt-4 border-t border-border">
+              <h5 className="text-xs sm:text-sm font-medium text-foreground mb-3">
+                Historial del Cliente
+              </h5>
+              <div className="space-y-3 max-h-32 sm:max-h-48 overflow-y-auto">
+                {customerHistory.map((visit) => (
+                  <div key={visit.id} className="flex items-start space-x-3 p-3 bg-muted/30 rounded-lg">
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs sm:text-sm font-medium text-foreground">
+                          {visit.service}
+                        </p>
+                        <div className="flex items-center space-x-1">
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <Icon
+                              key={i}
+                              name="Star"
+                              size={10}
+                              className={`sm:w-3 sm:h-3 ${i < visit.rating ? 'text-warning fill-current' : 'text-muted-foreground'}`}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        {new Date(visit.date).toLocaleDateString('es-ES')} • {visit.staff}
+                      </p>
+                      {visit.notes && (
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {visit.notes}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                </div>
+                ))}
               </div>
-
-              {selectedAppointment.notes && (
-                <div>
-                  <p className="text-xs sm:text-sm text-muted-foreground">Notas</p>
-                  <p className="text-xs sm:text-sm text-foreground">{selectedAppointment.notes}</p>
-                </div>
-              )}
-            </>
+            </div>
           )}
         </div>
-
-        {/* Quick Actions */}
-        {!isEditing && (
-          <div className="flex flex-wrap gap-2 pt-4 border-t border-border">
-            <Button variant="success" size="sm" iconName="Check" onClick={handleConfirmAppointment} className="text-xs">
-              Confirmar
-            </Button>
-            <Button variant="warning" size="sm" iconName="Clock" onClick={handleReschedule} className="text-xs">
-              Reprogramar
-            </Button>
-            <Button variant="outline" size="sm" iconName="MessageSquare" onClick={handleSendSMS} className="text-xs">
-              Enviar SMS
-            </Button>
-            <Button variant="outline" size="sm" iconName="Phone" onClick={handleCall} className="text-xs">
-              Llamar
-            </Button>
-            <Button variant="destructive" size="sm" iconName="X" onClick={handleCancelAppointment} className="text-xs">
-              Cancelar
-            </Button>
-          </div>
-        )}
-
-        {/* Customer History */}
-        {!isEditing && (
-          <div className="pt-4 border-t border-border">
-            <h5 className="text-xs sm:text-sm font-medium text-foreground mb-3">
-              Historial del Cliente
-            </h5>
-            <div className="space-y-3 max-h-32 sm:max-h-48 overflow-y-auto">
-              {customerHistory.map((visit) => (
-                <div key={visit.id} className="flex items-start space-x-3 p-3 bg-muted/30 rounded-lg">
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <p className="text-xs sm:text-sm font-medium text-foreground">
-                        {visit.service}
-                      </p>
-                      <div className="flex items-center space-x-1">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <Icon
-                            key={i}
-                            name="Star"
-                            size={10}
-                            className={`sm:w-3 sm:h-3 ${i < visit.rating ? 'text-warning fill-current' : 'text-muted-foreground'}`}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      {new Date(visit.date).toLocaleDateString('es-ES')} • {visit.staff}
-                    </p>
-                    {visit.notes && (
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {visit.notes}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

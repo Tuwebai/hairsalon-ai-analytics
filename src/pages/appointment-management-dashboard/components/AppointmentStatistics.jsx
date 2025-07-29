@@ -60,30 +60,45 @@ const AppointmentStatistics = () => {
 
       <div className="space-y-3">
         {statisticsData.map((stat) => (
-          <div key={stat.id} className="bg-card rounded-lg p-4 card-shadow">
-            <div className="flex items-start justify-between">
-              <div className="flex items-center space-x-3">
-                <div className={`w-10 h-10 rounded-lg ${stat.bgColor} flex items-center justify-center`}>
-                  <Icon name={stat.icon} size={20} className={stat.color} />
+          <div key={stat.id} className="card p-4 card-hover relative overflow-hidden">
+            {/* Gradient overlay */}
+            <div 
+              className="absolute inset-0 opacity-5"
+              style={{ 
+                background: `linear-gradient(135deg, var(--text-accent) 0%, transparent 100%)`,
+                pointerEvents: 'none'
+              }}
+            />
+            
+            <div className="relative z-10">
+              <div className="flex items-start justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className={`w-10 h-10 rounded-xl shadow-lg flex items-center justify-center`}
+                       style={{
+                         background: `linear-gradient(135deg, ${stat.bgColor.replace('/10', '')} 0%, ${stat.color.replace('text-', '')}20 100%)`,
+                         border: `1px solid ${stat.color.replace('text-', '')}30`
+                       }}>
+                    <Icon name={stat.icon} size={20} className={stat.color} />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">{stat.title}</p>
+                    <p className="text-xl font-semibold text-foreground">{stat.value}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">{stat.title}</p>
-                  <p className="text-xl font-semibold text-foreground">{stat.value}</p>
+                <div className="text-right">
+                  <div className={`flex items-center space-x-1 ${
+                    stat.trend === 'up' ? 'text-success' : 'text-error'
+                  }`}>
+                    <Icon 
+                      name={stat.trend === 'up' ? 'TrendingUp' : 'TrendingDown'} 
+                      size={14} 
+                    />
+                    <span className="text-sm font-medium">{stat.change}</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Meta: {stat.target}
+                  </p>
                 </div>
-              </div>
-              <div className="text-right">
-                <div className={`flex items-center space-x-1 ${
-                  stat.trend === 'up' ? 'text-success' : 'text-error'
-                }`}>
-                  <Icon 
-                    name={stat.trend === 'up' ? 'TrendingUp' : 'TrendingDown'} 
-                    size={14} 
-                  />
-                  <span className="text-sm font-medium">{stat.change}</span>
-                </div>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Meta: {stat.target}
-                </p>
               </div>
             </div>
           </div>
