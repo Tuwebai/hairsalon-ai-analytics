@@ -81,23 +81,20 @@
   --info-dark: #3b82f6;
 }
 
-/* Theme Transition Variables */
+/* Theme Transition Variables - Instant */
 :root {
-  --transition-duration: 0.3s;
-  --transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-duration: 0s;
+  --transition-timing: ease;
   --transition-delay: 0s;
 }
 
-/* Global Styles with Enhanced Smooth Transitions */
+/* Global Styles - No Theme Transitions */
 * {
+  /* Remove theme-related transitions for instant switching */
   transition: 
-    background-color var(--transition-duration) var(--transition-timing),
-    color var(--transition-duration) var(--transition-timing),
-    border-color var(--transition-duration) var(--transition-timing),
-    box-shadow var(--transition-duration) var(--transition-timing),
-    opacity var(--transition-duration) var(--transition-timing),
-    transform var(--transition-duration) var(--transition-timing),
-    filter var(--transition-duration) var(--transition-timing);
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    filter 0.2s ease;
 }
 
 /* Exclude certain elements from transitions */
@@ -108,31 +105,28 @@
   transition: none !important;
 }
 
-/* Enhanced theme transition styles */
+/* Instant theme change - no transitions */
 .theme-transitioning {
-  --transition-duration: 0.4s;
-  --transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-duration: 0s;
+  --transition-timing: ease;
 }
 
 .theme-transitioning * {
+  /* Only keep non-theme transitions */
   transition: 
-    background-color var(--transition-duration) var(--transition-timing),
-    color var(--transition-duration) var(--transition-timing),
-    border-color var(--transition-duration) var(--transition-timing),
-    box-shadow var(--transition-duration) var(--transition-timing),
-    opacity var(--transition-duration) var(--transition-timing),
-    transform var(--transition-duration) var(--transition-timing),
-    filter var(--transition-duration) var(--transition-timing) !important;
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    filter 0.2s ease !important;
 }
 
-/* Smooth gradient transitions */
+/* Instant gradient changes */
 .theme-transitioning .bg-gradient-primary,
 .theme-transitioning .bg-gradient-secondary,
 .theme-transitioning .bg-gradient-accent,
 .theme-transitioning .bg-gradient-card,
 .theme-transitioning .bg-gradient-navbar,
 .theme-transitioning .bg-gradient-button {
-  transition: background var(--transition-duration) var(--transition-timing) !important;
+  transition: none !important;
 }
 
 body {

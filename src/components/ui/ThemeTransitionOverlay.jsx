@@ -8,21 +8,21 @@ const ThemeTransitionOverlay = ({ isTransitioning, theme }) => {
   const overlayVariants = {
     hidden: { 
       opacity: 0,
-      scale: 0.8
+      scale: 0.9
     },
     visible: { 
       opacity: 1,
       scale: 1,
       transition: {
-        duration: 0.2,
+        duration: 0.1,
         ease: "easeOut"
       }
     },
     exit: { 
       opacity: 0,
-      scale: 1.1,
+      scale: 1.05,
       transition: {
-        duration: 0.2,
+        duration: 0.1,
         ease: "easeIn"
       }
     }
@@ -31,25 +31,24 @@ const ThemeTransitionOverlay = ({ isTransitioning, theme }) => {
   const iconVariants = {
     hidden: { 
       opacity: 0,
-      rotate: -180,
-      scale: 0
+      rotate: -90,
+      scale: 0.8
     },
     visible: { 
       opacity: 1,
       rotate: 0,
       scale: 1,
       transition: {
-        duration: 0.3,
-        delay: 0.05,
+        duration: 0.15,
         ease: [0.4, 0, 0.2, 1]
       }
     },
     exit: { 
       opacity: 0,
-      rotate: 180,
-      scale: 0,
+      rotate: 90,
+      scale: 0.8,
       transition: {
-        duration: 0.2,
+        duration: 0.1,
         ease: [0.4, 0, 0.2, 1]
       }
     }

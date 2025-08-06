@@ -13,10 +13,10 @@ const ThemeToggle = ({ className = '' }) => {
     setIsAnimating(true);
     toggleTheme();
     
-    // Reset animation state after transition
+    // Reset animation state immediately
     setTimeout(() => {
       setIsAnimating(false);
-    }, 400);
+    }, 100);
   };
 
   const createRipple = (event) => {
@@ -42,24 +42,24 @@ const ThemeToggle = ({ className = '' }) => {
   const iconVariants = {
     initial: { 
       opacity: 0, 
-      rotate: isDark ? 90 : -90, 
-      scale: 0 
+      rotate: isDark ? 45 : -45, 
+      scale: 0.8 
     },
     animate: { 
       opacity: 1, 
       rotate: 0, 
       scale: 1,
       transition: {
-        duration: 0.4,
+        duration: 0.15,
         ease: [0.4, 0, 0.2, 1]
       }
     },
     exit: { 
       opacity: 0, 
-      rotate: isDark ? -90 : 90, 
-      scale: 0,
+      rotate: isDark ? -45 : 45, 
+      scale: 0.8,
       transition: {
-        duration: 0.3,
+        duration: 0.1,
         ease: [0.4, 0, 0.2, 1]
       }
     }

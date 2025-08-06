@@ -32,17 +32,13 @@ export const ThemeProvider = ({ children }) => {
     // Save theme to localStorage
     localStorage.setItem('theme', theme);
     
-    // Apply theme to document with smooth transition
+    // Apply theme to document instantly
     const root = document.documentElement;
     
-    // Add transition class for smooth theme change
-    root.classList.add('theme-transitioning');
-    setIsTransitioning(true);
-    
-    // Apply theme
+    // Apply theme immediately without transitions
     root.setAttribute('data-theme', theme);
     
-    // Update CSS custom properties
+    // Update CSS custom properties instantly
     if (theme === 'dark') {
       root.classList.add('dark');
       root.classList.remove('light');
@@ -51,11 +47,8 @@ export const ThemeProvider = ({ children }) => {
       root.classList.remove('dark');
     }
     
-    // Remove transition class after animation completes
-    setTimeout(() => {
-      root.classList.remove('theme-transitioning');
-      setIsTransitioning(false);
-    }, 400);
+    // No transition delay - instant change
+    setIsTransitioning(false);
   }, [theme]);
 
   const toggleTheme = () => {
