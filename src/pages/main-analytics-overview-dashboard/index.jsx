@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavigationBar from '../../components/ui/NavigationBar';
 import KPICard from './components/KPICard';
@@ -13,332 +13,300 @@ import ParticleBackground from '../../components/ui/ParticleBackground';
 import { useAuth } from '../../contexts/AuthContext';
 import Icon from '../../components/AppIcon';
 
+// Datos simulados más realistas y dinámicos
+const SIMULATED_DATA = {
+  baseMetrics: {
+    today: { messages: 127, appointments: 34, satisfaction: 4.7, revenue: 1250 },
+    week: { messages: 1106, appointments: 218, satisfaction: 4.5, revenue: 14650 },
+    month: { messages: 2635, appointments: 523, satisfaction: 4.4, revenue: 32900 }
+  },
+  trends: {
+    today: { messages: 12.5, appointments: 8.2, satisfaction: 3.1, revenue: 5.7 },
+    week: { messages: 15.3, appointments: 12.8, satisfaction: 2.4, revenue: 8.9 },
+    month: { messages: 18.7, appointments: 14.2, satisfaction: 1.8, revenue: 11.5 }
+  },
+  chartData: {
+    today: [
+      { time: '09:00', messages: 15, satisfaction: 4.2, appointments: 3, revenue: 180 },
+      { time: '10:00', messages: 23, satisfaction: 4.5, appointments: 5, revenue: 320 },
+      { time: '11:00', messages: 18, satisfaction: 4.3, appointments: 4, revenue: 280 },
+      { time: '12:00', messages: 31, satisfaction: 4.7, appointments: 7, revenue: 450 },
+      { time: '13:00', messages: 25, satisfaction: 4.4, appointments: 6, revenue: 380 },
+      { time: '14:00', messages: 28, satisfaction: 4.6, appointments: 8, revenue: 520 },
+      { time: '15:00', messages: 22, satisfaction: 4.8, appointments: 5, revenue: 350 },
+      { time: '16:00', messages: 35, satisfaction: 4.5, appointments: 9, revenue: 580 }
+    ],
+    week: [
+      { time: 'Lun', messages: 145, satisfaction: 4.3, appointments: 28, revenue: 1850 },
+      { time: 'Mar', messages: 167, satisfaction: 4.5, appointments: 32, revenue: 2100 },
+      { time: 'Mié', messages: 134, satisfaction: 4.2, appointments: 25, revenue: 1650 },
+      { time: 'Jue', messages: 189, satisfaction: 4.7, appointments: 35, revenue: 2300 },
+      { time: 'Vie', messages: 201, satisfaction: 4.6, appointments: 38, revenue: 2450 },
+      { time: 'Sáb', messages: 156, satisfaction: 4.4, appointments: 30, revenue: 1950 },
+      { time: 'Dom', messages: 98, satisfaction: 4.1, appointments: 22, revenue: 1400 }
+    ],
+    month: [
+      { time: 'Sem 1', messages: 580, satisfaction: 4.2, appointments: 115, revenue: 7200 },
+      { time: 'Sem 2', messages: 645, satisfaction: 4.4, appointments: 128, revenue: 8100 },
+      { time: 'Sem 3', messages: 712, satisfaction: 4.6, appointments: 142, revenue: 8900 },
+      { time: 'Sem 4', messages: 698, satisfaction: 4.5, appointments: 138, revenue: 8700 }
+    ]
+  }
+};
+
 const MainAnalyticsOverviewDashboard = () => {
   const [selectedRange, setSelectedRange] = useState('today');
   const [chartType, setChartType] = useState('line');
   const [realTimeEnabled, setRealTimeEnabled] = useState(true);
   const [notification, setNotification] = useState({ isVisible: false, message: '', type: 'info' });
+  const [liveData, setLiveData] = useState({ messages: 0, appointments: 0 });
+  
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  // Current user from auth context
-  const currentUser = {
+  // Usuario actual memoizado
+  const currentUser = useMemo(() => ({
     name: user?.username || "Usuario",
     role: user?.role || "Administrador"
-  };
+  }), [user?.username, user?.role]);
 
-  // Generate live message count based on selected range
-  const getLiveMessageCount = (range) => {
-    const baseCounts = {
-      today: 127,
-      week: 1106,
-      month: 2635
+  // Generar datos dinámicos basados en el rango seleccionado
+  const generateDynamicData = useCallback((range) => {
+    const base = SIMULATED_DATA.baseMetrics[range];
+    const trends = SIMULATED_DATA.trends[range];
+    
+    // Simular variación realista basada en la hora del día
+    const now = new Date();
+    const hour = now.getHours();
+    const timeMultiplier = hour >= 9 && hour <= 18 ? 1.2 : 0.8;
+    
+    return {
+      messages: Math.round(base.messages * timeMultiplier),
+      appointments: Math.round(base.appointments * timeMultiplier),
+      satisfaction: Math.min(5, Math.max(1, base.satisfaction + (Math.random() - 0.5) * 0.2)),
+      revenue: Math.round(base.revenue * timeMultiplier),
+      trends
     };
-    return baseCounts[range] || baseCounts.today;
-  };
+  }, []);
 
-  // Get current live message count
-  const liveMessageCount = getLiveMessageCount(selectedRange);
+  // Datos del gráfico memoizados
+  const chartData = useMemo(() => 
+    SIMULATED_DATA.chartData[selectedRange] || SIMULATED_DATA.chartData.today,
+    [selectedRange]
+  );
 
-  // Generate example data based on selected range with more realistic data
-  const generateDataForRange = (range) => {
-    const baseData = {
-      today: [
-        { time: '09:00', messages: 15, satisfaction: 4.2, appointments: 3, revenue: 180 },
-        { time: '10:00', messages: 23, satisfaction: 4.5, appointments: 5, revenue: 320 },
-        { time: '11:00', messages: 18, satisfaction: 4.3, appointments: 4, revenue: 280 },
-        { time: '12:00', messages: 31, satisfaction: 4.7, appointments: 7, revenue: 450 },
-        { time: '13:00', messages: 25, satisfaction: 4.4, appointments: 6, revenue: 380 },
-        { time: '14:00', messages: 28, satisfaction: 4.6, appointments: 8, revenue: 520 },
-        { time: '15:00', messages: 22, satisfaction: 4.8, appointments: 5, revenue: 350 },
-        { time: '16:00', messages: 35, satisfaction: 4.5, appointments: 9, revenue: 580 }
-      ],
-      week: [
-        { time: 'Lun', messages: 145, satisfaction: 4.3, appointments: 28, revenue: 1850 },
-        { time: 'Mar', messages: 167, satisfaction: 4.5, appointments: 32, revenue: 2100 },
-        { time: 'Mié', messages: 134, satisfaction: 4.2, appointments: 25, revenue: 1650 },
-        { time: 'Jue', messages: 189, satisfaction: 4.7, appointments: 35, revenue: 2300 },
-        { time: 'Vie', messages: 201, satisfaction: 4.6, appointments: 38, revenue: 2450 },
-        { time: 'Sáb', messages: 156, satisfaction: 4.4, appointments: 30, revenue: 1950 },
-        { time: 'Dom', messages: 98, satisfaction: 4.1, appointments: 22, revenue: 1400 }
-      ],
-      month: [
-        { time: 'Sem 1', messages: 580, satisfaction: 4.2, appointments: 115, revenue: 7200 },
-        { time: 'Sem 2', messages: 645, satisfaction: 4.4, appointments: 128, revenue: 8100 },
-        { time: 'Sem 3', messages: 712, satisfaction: 4.6, appointments: 142, revenue: 8900 },
-        { time: 'Sem 4', messages: 698, satisfaction: 4.5, appointments: 138, revenue: 8700 }
-      ]
-    };
-    return baseData[range] || baseData.today;
-  };
+  // KPIs memoizados y dinámicos
+  const kpiData = useMemo(() => {
+    const dynamicData = generateDynamicData(selectedRange);
+    
+    return [
+      {
+        title: `Mensajes ${selectedRange === 'today' ? 'de Hoy' : selectedRange === 'week' ? 'de la Semana' : 'del Mes'}`,
+        value: dynamicData.messages,
+        trend: "up",
+        trendValue: dynamicData.trends.messages,
+        icon: "MessageSquare",
+        color: "blue",
+        isLive: true
+      },
+      {
+        title: "Citas Reservadas",
+        value: dynamicData.appointments,
+        trend: "up",
+        trendValue: dynamicData.trends.appointments,
+        icon: "Calendar",
+        color: "green"
+      },
+      {
+        title: "Satisfacción Promedio",
+        value: dynamicData.satisfaction,
+        trend: "up",
+        trendValue: dynamicData.trends.satisfaction,
+        icon: "Star",
+        color: "yellow",
+        suffix: "/5"
+      },
+      {
+        title: `Ingresos ${selectedRange === 'today' ? 'del Día' : selectedRange === 'week' ? 'de la Semana' : 'del Mes'}`,
+        value: dynamicData.revenue,
+        trend: "up",
+        trendValue: dynamicData.trends.revenue,
+        icon: "DollarSign",
+        color: "purple",
+        suffix: "€"
+      }
+    ];
+  }, [selectedRange, generateDynamicData]);
 
-  // Generate KPI data based on selected range
-  const generateKPIData = (range) => {
-    const kpiDataByRange = {
-      today: [
-    {
-      title: "Mensajes de Hoy",
-          value: 127,
-      trend: "up",
-      trendValue: 12.5,
-      icon: "MessageSquare",
-      color: "blue",
-      isLive: true
-    },
-    {
-      title: "Citas Reservadas",
-      value: 34,
-      trend: "up",
-      trendValue: 8.2,
-      icon: "Calendar",
-      color: "green"
-    },
-    {
-      title: "Satisfacción Promedio",
-      value: 4.7,
-      trend: "up",
-      trendValue: 3.1,
-      icon: "Star",
-      color: "yellow",
-      suffix: "/5"
-    },
-    {
-      title: "Ingresos del Día",
-      value: 1250,
-      trend: "up",
-      trendValue: 5.7,
-      icon: "DollarSign",
-      color: "purple",
-      suffix: "€"
-    }
-      ],
-      week: [
-        {
-          title: "Mensajes de la Semana",
-          value: 1106,
-          trend: "up",
-          trendValue: 15.3,
-          icon: "MessageSquare",
-          color: "blue",
-          isLive: true
-        },
-        {
-          title: "Citas Reservadas",
-          value: 218,
-          trend: "up",
-          trendValue: 12.8,
-          icon: "Calendar",
-          color: "green"
-        },
-        {
-          title: "Satisfacción Promedio",
-          value: 4.5,
-          trend: "up",
-          trendValue: 2.4,
-          icon: "Star",
-          color: "yellow",
-          suffix: "/5"
-        },
-        {
-          title: "Ingresos de la Semana",
-          value: 14650,
-          trend: "up",
-          trendValue: 8.9,
-          icon: "DollarSign",
-          color: "purple",
-          suffix: "€"
-        }
-      ],
-      month: [
-        {
-          title: "Mensajes del Mes",
-          value: 2635,
-          trend: "up",
-          trendValue: 18.7,
-          icon: "MessageSquare",
-          color: "blue",
-          isLive: true
-        },
-        {
-          title: "Citas Reservadas",
-          value: 523,
-          trend: "up",
-          trendValue: 14.2,
-          icon: "Calendar",
-          color: "green"
-        },
-        {
-          title: "Satisfacción Promedio",
-          value: 4.4,
-          trend: "up",
-          trendValue: 1.8,
-          icon: "Star",
-          color: "yellow",
-          suffix: "/5"
-        },
-        {
-          title: "Ingresos del Mes",
-          value: 32900,
-          trend: "up",
-          trendValue: 11.5,
-          icon: "DollarSign",
-          color: "purple",
-          suffix: "€"
-        }
-      ]
-    };
-    return kpiDataByRange[range] || kpiDataByRange.today;
-  };
+  // Datos de citas simulados y dinámicos
+  const appointmentsData = useMemo(() => {
+    const baseAppointments = [
+      { id: 1, clientName: "Ana Martínez", service: "Corte y Peinado", time: "10:00", status: "confirmed" },
+      { id: 2, clientName: "Carlos Rodríguez", service: "Coloración", time: "11:30", status: "pending" },
+      { id: 3, clientName: "Laura Fernández", service: "Tratamiento Capilar", time: "14:00", status: "confirmed" },
+      { id: 4, clientName: "Miguel Torres", service: "Corte Masculino", time: "15:30", status: "cancelled" },
+      { id: 5, clientName: "Patricia Silva", service: "Manicura", time: "16:00", status: "pending" }
+    ];
 
-  // Get chart data based on selected range
-  const chartData = generateDataForRange(selectedRange);
+    // Generar citas adicionales basadas en el rango
+    const additionalCount = selectedRange === 'today' ? 0 : selectedRange === 'week' ? 15 : 50;
+    const additionalAppointments = Array.from({ length: additionalCount }, (_, i) => ({
+      id: 100 + i,
+      clientName: `Cliente ${i + 1}`,
+      service: ["Corte", "Coloración", "Tratamiento", "Manicura"][Math.floor(Math.random() * 4)],
+      time: `${Math.floor(Math.random() * 8) + 9}:${Math.random() > 0.5 ? '00' : '30'}`,
+      status: ["confirmed", "pending", "cancelled"][Math.floor(Math.random() * 3)],
+      date: new Date(Date.now() + Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString()
+    }));
 
-  // Get KPI data based on selected range
-  const kpiData = generateKPIData(selectedRange);
+    return [...baseAppointments, ...additionalAppointments];
+  }, [selectedRange]);
 
-  // Mock appointments data with status filters
-  const [appointmentFilters, setAppointmentFilters] = useState({
-    status: 'all'
-  });
+  // Filtros de citas
+  const [appointmentFilters, setAppointmentFilters] = useState({ status: 'all' });
 
-  const allAppointmentsData = [
-    {
-      id: 1,
-      clientName: "Ana Martínez",
-      service: "Corte y Peinado",
-      time: "10:00",
-      date: new Date().toISOString(),
-      status: "confirmed"
-    },
-    {
-      id: 2,
-      clientName: "Carlos Rodríguez",
-      service: "Coloración",
-      time: "11:30",
-      date: new Date().toISOString(),
-      status: "pending"
-    },
-    {
-      id: 3,
-      clientName: "Laura Fernández",
-      service: "Tratamiento Capilar",
-      time: "14:00",
-      date: new Date().toISOString(),
-      status: "confirmed"
-    },
-    {
-      id: 4,
-      clientName: "Miguel Torres",
-      service: "Corte Masculino",
-      time: "15:30",
-      date: new Date().toISOString(),
-      status: "cancelled"
-    },
-    {
-      id: 5,
-      clientName: "Patricia Silva",
-      service: "Manicura",
-      time: "16:00",
-      date: new Date().toISOString(),
-      status: "pending"
-    }
-  ];
+  // Citas filtradas memoizadas
+  const filteredAppointments = useMemo(() => 
+    appointmentFilters.status === 'all' 
+      ? appointmentsData 
+      : appointmentsData.filter(apt => apt.status === appointmentFilters.status),
+    [appointmentsData, appointmentFilters.status]
+  );
 
-  // Filter appointments based on status
-  const filteredAppointments = appointmentFilters.status === 'all' 
-    ? allAppointmentsData 
-    : allAppointmentsData.filter(apt => apt.status === appointmentFilters.status);
+  // Datos de interacciones simulados y dinámicos
+  const interactionsData = useMemo(() => {
+    const baseInteractions = [
+      {
+        id: 1,
+        clientName: "Sofia López",
+        phone: "+34 612 345 678",
+        message: "Hola, me gustaría reservar una cita para un corte y peinado para el viernes por la tarde.",
+        sentiment: "positive",
+        outcome: "booked",
+        time: "hace 5 min"
+      },
+      {
+        id: 2,
+        clientName: "Valentin Berretta",
+        phone: "+34 623 456 789",
+        message: "¿Tienen disponibilidad para coloración esta semana? Necesito cambiar mi look urgentemente.",
+        sentiment: "neutral",
+        outcome: "interested",
+        time: "hace 12 min"
+      },
+      {
+        id: 3,
+        clientName: "Carmen Ruiz",
+        phone: "+34 634 567 890",
+        message: "El servicio de la última vez no me gustó nada. Los precios son muy altos para la calidad.",
+        sentiment: "negative",
+        outcome: "not_interested",
+        time: "hace 25 min"
+      },
+      {
+        id: 4,
+        clientName: "Roberto Jiménez",
+        phone: "+34 645 678 901",
+        message: "Excelente atención, muy profesionales. ¿Puedo reservar para el mismo estilista de la vez anterior?",
+        sentiment: "positive",
+        outcome: "booked",
+        time: "hace 1 hora"
+      }
+    ];
 
-  // Mock interactions data
-  const interactionsData = [
-    {
-      id: 1,
-      clientName: "Sofia López",
-      phone: "+34 612 345 678",
-      message: "Hola, me gustaría reservar una cita para un corte y peinado para el viernes por la tarde.",
-      sentiment: "positive",
-      outcome: "booked",
-      time: "hace 5 min"
-    },
-    {
-      id: 2,
-      clientName: "David García",
-      phone: "+34 623 456 789",
-      message: "¿Tienen disponibilidad para coloración esta semana? Necesito cambiar mi look urgentemente.",
-      sentiment: "neutral",
-      outcome: "interested",
-      time: "hace 12 min"
-    },
-    {
-      id: 3,
-      clientName: "Carmen Ruiz",
-      phone: "+34 634 567 890",
-      message: "El servicio de la última vez no me gustó nada. Los precios son muy altos para la calidad.",
-      sentiment: "negative",
-      outcome: "not_interested",
-      time: "hace 25 min"
-    },
-    {
-      id: 4,
-      clientName: "Roberto Jiménez",
-      phone: "+34 645 678 901",
-      message: "Excelente atención, muy profesionales. ¿Puedo reservar para el mismo estilista de la vez anterior?",
-      sentiment: "positive",
-      outcome: "booked",
-      time: "hace 1 hora"
-    }
-  ];
+    // Generar interacciones adicionales basadas en el rango
+    const additionalCount = selectedRange === 'today' ? 0 : selectedRange === 'week' ? 10 : 25;
+    const additionalInteractions = Array.from({ length: additionalCount }, (_, i) => ({
+      id: 1000 + i,
+      clientName: `Cliente ${i + 1}`,
+      phone: `+34 ${Math.floor(Math.random() * 900) + 100} ${Math.floor(Math.random() * 900) + 100} ${Math.floor(Math.random() * 900) + 100}`,
+      message: "Consulta sobre servicios disponibles",
+      sentiment: ["positive", "neutral", "negative"][Math.floor(Math.random() * 3)],
+      outcome: ["booked", "interested", "not_interested"][Math.floor(Math.random() * 3)],
+      time: `hace ${Math.floor(Math.random() * 60) + 1} min`
+    }));
 
-  // Simulate real-time message updates
+    return [...baseInteractions, ...additionalInteractions];
+  }, [selectedRange]);
+
+  // Simulación de datos en tiempo real
   useEffect(() => {
     if (!realTimeEnabled) return;
 
     const interval = setInterval(() => {
-      // The liveMessageCount state is now derived from selectedRange,
-      // so we don't need to update it here directly.
-      // The interval will continue to run, but the value displayed will
-      // reflect the current selectedRange.
+      setLiveData(prev => ({
+        messages: prev.messages + Math.floor(Math.random() * 3) + 1,
+        appointments: prev.appointments + Math.floor(Math.random() * 2)
+      }));
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [realTimeEnabled, selectedRange]); // Added selectedRange to dependency array
+  }, [realTimeEnabled]);
 
-  const handleRangeChange = (range, customDates = null) => {
+  // Handlers memoizados
+  const handleRangeChange = useCallback((range, customDates = null) => {
+    console.log('🔄 handleRangeChange called with:', range, 'customDates:', customDates);
+    console.log('📊 Previous selectedRange:', selectedRange);
+    
     setSelectedRange(range);
-    showNotification(`Filtro actualizado a: ${range === 'today' ? 'Hoy' : range === 'week' ? 'Esta semana' : 'Este mes'}`, 'info');
-  };
+    
+    const rangeLabel = range === 'today' ? 'Hoy' : range === 'week' ? 'Esta semana' : 'Este mes';
+    console.log('🏷️ Range label:', rangeLabel);
+    
+    showNotification(`Filtro actualizado a: ${rangeLabel}`, 'info');
+  }, [selectedRange]);
 
-  const handleChartTypeChange = (type) => {
+  const handleChartTypeChange = useCallback((type) => {
     setChartType(type);
     showNotification(`Tipo de gráfico cambiado a: ${type === 'line' ? 'Línea' : type === 'area' ? 'Área' : 'Barras'}`, 'info');
-  };
+  }, []);
 
-  const showNotification = (message, type = 'info') => {
+  const showNotification = useCallback((message, type = 'info') => {
     setNotification({ isVisible: true, message, type });
-  };
+  }, []);
 
-  const hideNotification = () => {
+  const hideNotification = useCallback(() => {
     setNotification({ isVisible: false, message: '', type: 'info' });
-  };
+  }, []);
 
-  const handleExport = async (format) => {
+  const handleExport = useCallback(async (format) => {
     console.log(`Exporting data in ${format} format...`);
-    // Simulate export process
     return new Promise((resolve) => {
       setTimeout(() => {
         console.log(`Export completed: analytics_report.${format}`);
         resolve();
       }, 2000);
     });
-  };
+  }, []);
 
-  const handleViewAllAppointments = () => {
+  const handleViewAllAppointments = useCallback(() => {
     navigate('/appointment-management-dashboard');
-  };
+  }, [navigate]);
 
-  const handleAppointmentStatusFilter = (status) => {
+  const handleAppointmentStatusFilter = useCallback((status) => {
     setAppointmentFilters({ status });
-  };
+  }, []);
+
+  // Datos del footer memoizados (eliminando duplicación)
+  const footerStats = useMemo(() => {
+    const dynamicData = generateDynamicData(selectedRange);
+    return {
+      messages: {
+        title: `Mensajes ${selectedRange === 'today' ? 'de Hoy' : selectedRange === 'week' ? 'de la Semana' : 'del Mes'}`,
+        value: dynamicData.messages.toLocaleString(),
+        period: selectedRange === 'today' ? 'Hoy' : selectedRange === 'week' ? 'Esta semana' : 'Este mes',
+        icon: "MessageSquare",
+        color: "info"
+      },
+      appointments: {
+        title: `Citas ${selectedRange === 'today' ? 'de Hoy' : selectedRange === 'week' ? 'de la Semana' : 'del Mes'}`,
+        value: dynamicData.appointments.toLocaleString(),
+        period: selectedRange === 'today' ? 'Hoy' : selectedRange === 'week' ? 'Esta semana' : 'Este mes',
+        icon: "Calendar",
+        color: "success"
+      }
+    };
+  }, [selectedRange, generateDynamicData]);
 
   return (
     <div className="min-h-screen relative" style={{ background: 'var(--bg-primary)' }}>
@@ -380,6 +348,7 @@ const MainAnalyticsOverviewDashboard = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 sm:gap-6 mb-6 sm:mb-8">
           <div className="sm:col-span-1 lg:col-span-4">
             <DateRangePicker
+              key={selectedRange}
               selectedRange={selectedRange}
               onRangeChange={handleRangeChange}
             />
@@ -401,7 +370,7 @@ const MainAnalyticsOverviewDashboard = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
           {kpiData.map((kpi, index) => (
             <KPICard
-              key={index}
+              key={`${selectedRange}-${index}`}
               title={kpi.title}
               value={kpi.value}
               trend={kpi.trend}
@@ -442,55 +411,49 @@ const MainAnalyticsOverviewDashboard = () => {
           <RecentInteractions interactions={interactionsData} />
         </div>
 
-        {/* Footer Stats - Removed staff utilization and other unwanted metrics */}
+        {/* Footer Stats - Optimizado y sin duplicación */}
         <div className="card p-4 sm:p-6">
-          
-          {/* Notification Toast */}
-          <NotificationToast
-            message={notification.message}
-            type={notification.type}
-            isVisible={notification.isVisible}
-            onClose={hideNotification}
-            duration={3000}
-          />
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div className="text-center">
               <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-lg mx-auto mb-2 sm:mb-3" style={{ background: 'var(--info-light)' }}>
-                <Icon name="MessageSquare" size={20} className="sm:w-6 sm:h-6" style={{ color: 'var(--info-dark)' }} />
+                <Icon name={footerStats.messages.icon} size={20} className="sm:w-6 sm:h-6" style={{ color: 'var(--info-dark)' }} />
               </div>
               <h4 className="text-base sm:text-lg font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
-                {selectedRange === 'today' ? 'Mensajes de Hoy' : 
-                 selectedRange === 'week' ? 'Mensajes de la Semana' : 'Mensajes del Mes'}
+                {footerStats.messages.title}
               </h4>
               <p className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--text-accent)' }}>
-                {selectedRange === 'today' ? '127' : 
-                 selectedRange === 'week' ? '1,106' : '2,635'}
+                {footerStats.messages.value}
               </p>
               <p className="text-xs sm:text-sm" style={{ color: 'var(--text-muted)' }}>
-                {selectedRange === 'today' ? 'Hoy' : 
-                 selectedRange === 'week' ? 'Esta semana' : 'Este mes'}
+                {footerStats.messages.period}
               </p>
             </div>
             
             <div className="text-center">
               <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-lg mx-auto mb-2 sm:mb-3" style={{ background: 'var(--success-light)' }}>
-                <Icon name="Calendar" size={20} className="sm:w-6 sm:h-6" style={{ color: 'var(--success-dark)' }} />
+                <Icon name={footerStats.appointments.icon} size={20} className="sm:w-6 sm:h-6" style={{ color: 'var(--success-dark)' }} />
               </div>
               <h4 className="text-base sm:text-lg font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
-                {selectedRange === 'today' ? 'Citas de Hoy' : 
-                 selectedRange === 'week' ? 'Citas de la Semana' : 'Citas del Mes'}
+                {footerStats.appointments.title}
               </h4>
               <p className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--success-dark)' }}>
-                {selectedRange === 'today' ? '34' : 
-                 selectedRange === 'week' ? '218' : '523'}
+                {footerStats.appointments.value}
               </p>
               <p className="text-xs sm:text-sm" style={{ color: 'var(--text-muted)' }}>
-                {selectedRange === 'today' ? 'Hoy' : 
-                 selectedRange === 'week' ? 'Esta semana' : 'Este mes'}
+                {footerStats.appointments.period}
               </p>
             </div>
           </div>
         </div>
+
+        {/* Notification Toast */}
+        <NotificationToast
+          message={notification.message}
+          type={notification.type}
+          isVisible={notification.isVisible}
+          onClose={hideNotification}
+          duration={3000}
+        />
       </div>
     </div>
   );

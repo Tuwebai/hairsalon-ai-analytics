@@ -1,42 +1,173 @@
-import React from 'react';
+import React, { memo, useMemo } from 'react';
 import Icon from '../../../components/AppIcon';
 
-const RecentInteractions = ({ interactions, className = '' }) => {
-  const getSentimentColor = (sentiment) => {
-    switch (sentiment) {
-      case 'positive': return 'text-success bg-success/10';
-      case 'negative': return 'text-error bg-error/10';
-      case 'neutral': return 'text-muted-foreground bg-muted/30';
-      default: return 'text-muted-foreground bg-muted/30';
-    }
-  };
+// Componente de fila memoizado para la vista móvil
+const MobileInteractionRow = memo(({ interaction }) => {
+  const sentimentStyles = useMemo(() => {
+    const colorMap = {
+      positive: 'text-success bg-success/10',
+      negative: 'text-error bg-error/10',
+      neutral: 'text-muted-foreground bg-muted/30'
+    };
+    return colorMap[interaction.sentiment] || 'text-muted-foreground bg-muted/30';
+  }, [interaction.sentiment]);
 
-  const getSentimentIcon = (sentiment) => {
-    switch (sentiment) {
-      case 'positive': return 'ThumbsUp';
-      case 'negative': return 'ThumbsDown';
-      case 'neutral': return 'Minus';
-      default: return 'MessageSquare';
-    }
-  };
+  const sentimentIcon = useMemo(() => {
+    const iconMap = {
+      positive: 'ThumbsUp',
+      negative: 'ThumbsDown',
+      neutral: 'Minus'
+    };
+    return iconMap[interaction.sentiment] || 'MessageSquare';
+  }, [interaction.sentiment]);
 
-  const getOutcomeColor = (outcome) => {
-    switch (outcome) {
-      case 'booked': return 'text-success bg-success/10';
-      case 'interested': return 'text-primary bg-primary/10';
-      case 'not_interested': return 'text-error bg-error/10';
-      default: return 'text-muted-foreground bg-muted/30';
-    }
-  };
+  const outcomeStyles = useMemo(() => {
+    const colorMap = {
+      booked: 'text-success bg-success/10',
+      interested: 'text-primary bg-primary/10',
+      not_interested: 'text-error bg-error/10'
+    };
+    return colorMap[interaction.outcome] || 'text-muted-foreground bg-muted/30';
+  }, [interaction.outcome]);
 
-  const getOutcomeLabel = (outcome) => {
-    switch (outcome) {
-      case 'booked': return 'Reservado';
-      case 'interested': return 'Interesado';
-      case 'not_interested': return 'No Interesado';
-      default: return 'Pendiente';
-    }
-  };
+  const outcomeLabel = useMemo(() => {
+    const labelMap = {
+      booked: 'Reservado',
+      interested: 'Interesado',
+      not_interested: 'No Interesado'
+    };
+    return labelMap[interaction.outcome] || 'Pendiente';
+  }, [interaction.outcome]);
+
+  return (
+    <div className="p-4 rounded-lg border" style={{ 
+      background: 'var(--bg-secondary)',
+      borderColor: 'var(--border-primary)'
+    }}>
+      <div className="flex items-start space-x-3 mb-3">
+        <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'var(--info-light)' }}>
+          <Icon name="User" size={14} style={{ color: 'var(--info-dark)' }} />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-medium truncate" style={{ color: 'var(--text-primary)' }}>
+            {interaction.clientName}
+          </p>
+          <p className="text-xs truncate" style={{ color: 'var(--text-muted)' }}>
+            {interaction.phone}
+          </p>
+          <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
+            {interaction.time}
+          </p>
+        </div>
+      </div>
+      
+      <p className="text-sm mb-3" style={{ color: 'var(--text-primary)' }}>
+        {interaction.message}
+      </p>
+      
+      <div className="flex items-center justify-between">
+        <div className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium ${sentimentStyles}`}>
+          <Icon name={sentimentIcon} size={12} />
+          <span className="capitalize">{interaction.sentiment}</span>
+        </div>
+        <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${outcomeStyles}`}>
+          {outcomeLabel}
+        </div>
+      </div>
+    </div>
+  );
+});
+
+MobileInteractionRow.displayName = 'MobileInteractionRow';
+
+// Componente de fila memoizado para la vista desktop
+const DesktopInteractionRow = memo(({ interaction }) => {
+  const sentimentStyles = useMemo(() => {
+    const colorMap = {
+      positive: 'text-success bg-success/10',
+      negative: 'text-error bg-error/10',
+      neutral: 'text-muted-foreground bg-muted/30'
+    };
+    return colorMap[interaction.sentiment] || 'text-muted-foreground bg-muted/30';
+  }, [interaction.sentiment]);
+
+  const sentimentIcon = useMemo(() => {
+    const iconMap = {
+      positive: 'ThumbsUp',
+      negative: 'ThumbsDown',
+      neutral: 'Minus'
+    };
+    return iconMap[interaction.sentiment] || 'MessageSquare';
+  }, [interaction.sentiment]);
+
+  const outcomeStyles = useMemo(() => {
+    const colorMap = {
+      booked: 'text-success bg-success/10',
+      interested: 'text-primary bg-primary/10',
+      not_interested: 'text-error bg-error/10'
+    };
+    return colorMap[interaction.outcome] || 'text-muted-foreground bg-muted/30';
+  }, [interaction.outcome]);
+
+  const outcomeLabel = useMemo(() => {
+    const labelMap = {
+      booked: 'Reservado',
+      interested: 'Interesado',
+      not_interested: 'No Interesado'
+    };
+    return labelMap[interaction.outcome] || 'Pendiente';
+  }, [interaction.outcome]);
+
+  return (
+    <tr className="hover:bg-accent/50 transition-colors">
+      <td className="py-3 px-2">
+        <div className="flex items-center space-x-2">
+          <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'var(--info-light)' }}>
+            <Icon name="User" size={14} style={{ color: 'var(--info-dark)' }} />
+          </div>
+          <div className="min-w-0">
+            <p className="text-sm font-medium truncate" style={{ color: 'var(--text-primary)' }}>
+              {interaction.clientName}
+            </p>
+            <p className="text-xs truncate" style={{ color: 'var(--text-muted)' }}>
+              {interaction.phone}
+            </p>
+          </div>
+        </div>
+      </td>
+      <td className="py-3 px-2">
+        <p className="text-sm line-clamp-2 max-w-xs" style={{ color: 'var(--text-primary)' }}>
+          {interaction.message}
+        </p>
+      </td>
+      <td className="py-3 px-2">
+        <div className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium ${sentimentStyles}`}>
+          <Icon name={sentimentIcon} size={12} />
+          <span className="capitalize">{interaction.sentiment}</span>
+        </div>
+      </td>
+      <td className="py-3 px-2">
+        <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${outcomeStyles}`}>
+          {outcomeLabel}
+        </div>
+      </td>
+      <td className="py-3 px-2">
+        <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
+          {interaction.time}
+        </span>
+      </td>
+    </tr>
+  );
+});
+
+DesktopInteractionRow.displayName = 'DesktopInteractionRow';
+
+const RecentInteractions = memo(({ interactions, className = '' }) => {
+  // Memoizar las interacciones limitadas para mostrar solo las primeras 10
+  const limitedInteractions = useMemo(() => 
+    interactions.slice(0, 10), 
+    [interactions]
+  );
 
   return (
     <div className={`card p-4 sm:p-6 ${className}`}>
@@ -53,42 +184,8 @@ const RecentInteractions = ({ interactions, className = '' }) => {
 
       {/* Mobile View */}
       <div className="block sm:hidden space-y-4">
-        {interactions.map((interaction) => (
-          <div key={interaction.id} className="p-4 rounded-lg border" style={{ 
-            background: 'var(--bg-secondary)',
-            borderColor: 'var(--border-primary)'
-          }}>
-            <div className="flex items-start space-x-3 mb-3">
-              <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'var(--info-light)' }}>
-                <Icon name="User" size={14} style={{ color: 'var(--info-dark)' }} />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate" style={{ color: 'var(--text-primary)' }}>
-                  {interaction.clientName}
-                </p>
-                <p className="text-xs truncate" style={{ color: 'var(--text-muted)' }}>
-                  {interaction.phone}
-                </p>
-                <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
-                  {interaction.time}
-                </p>
-              </div>
-            </div>
-            
-            <p className="text-sm mb-3" style={{ color: 'var(--text-primary)' }}>
-              {interaction.message}
-            </p>
-            
-            <div className="flex items-center justify-between">
-              <div className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium ${getSentimentColor(interaction.sentiment)}`}>
-                <Icon name={getSentimentIcon(interaction.sentiment)} size={12} />
-                <span className="capitalize">{interaction.sentiment}</span>
-              </div>
-              <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getOutcomeColor(interaction.outcome)}`}>
-                {getOutcomeLabel(interaction.outcome)}
-              </div>
-            </div>
-          </div>
+        {limitedInteractions.map((interaction) => (
+          <MobileInteractionRow key={interaction.id} interaction={interaction} />
         ))}
       </div>
 
@@ -115,51 +212,16 @@ const RecentInteractions = ({ interactions, className = '' }) => {
             </tr>
           </thead>
           <tbody className="divide-y" style={{ borderColor: 'var(--border-primary)' }}>
-            {interactions.map((interaction) => (
-              <tr key={interaction.id} className="hover:bg-accent/50 transition-colors">
-                <td className="py-3 px-2">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'var(--info-light)' }}>
-                      <Icon name="User" size={14} style={{ color: 'var(--info-dark)' }} />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-sm font-medium truncate" style={{ color: 'var(--text-primary)' }}>
-                        {interaction.clientName}
-                      </p>
-                      <p className="text-xs truncate" style={{ color: 'var(--text-muted)' }}>
-                        {interaction.phone}
-                      </p>
-                    </div>
-                  </div>
-                </td>
-                <td className="py-3 px-2">
-                  <p className="text-sm line-clamp-2 max-w-xs" style={{ color: 'var(--text-primary)' }}>
-                    {interaction.message}
-                  </p>
-                </td>
-                <td className="py-3 px-2">
-                  <div className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium ${getSentimentColor(interaction.sentiment)}`}>
-                    <Icon name={getSentimentIcon(interaction.sentiment)} size={12} />
-                    <span className="capitalize">{interaction.sentiment}</span>
-                  </div>
-                </td>
-                <td className="py-3 px-2">
-                  <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getOutcomeColor(interaction.outcome)}`}>
-                    {getOutcomeLabel(interaction.outcome)}
-                  </div>
-                </td>
-                <td className="py-3 px-2">
-                  <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                    {interaction.time}
-                  </span>
-                </td>
-              </tr>
+            {limitedInteractions.map((interaction) => (
+              <DesktopInteractionRow key={interaction.id} interaction={interaction} />
             ))}
           </tbody>
         </table>
       </div>
     </div>
   );
-};
+});
+
+RecentInteractions.displayName = 'RecentInteractions';
 
 export default RecentInteractions;

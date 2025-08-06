@@ -9,15 +9,20 @@ const DateRangePicker = ({ selectedRange, onRangeChange, className = '' }) => {
 
   const presets = [
     { id: 'today', label: 'Hoy', value: 'today' },
-    { id: 'week', label: 'Esta Semana', value: 'week' },
-    { id: 'month', label: 'Este Mes', value: 'month' },
+    { id: 'week', label: 'Esta semana', value: 'week' },
+    { id: 'month', label: 'Este mes', value: 'month' },
     { id: 'custom', label: 'Personalizado', value: 'custom' }
   ];
 
   const handlePresetSelect = (preset) => {
+    console.log('🎯 DateRangePicker - handlePresetSelect called with:', preset);
+    console.log('🎯 Current selectedRange prop:', selectedRange);
+    
     if (preset.value === 'custom') {
       return;
     }
+    
+    console.log('🎯 Calling onRangeChange with:', preset.value);
     onRangeChange(preset.value);
     setIsOpen(false);
   };
@@ -31,7 +36,9 @@ const DateRangePicker = ({ selectedRange, onRangeChange, className = '' }) => {
 
   const getDisplayText = () => {
     const preset = presets.find(p => p.value === selectedRange);
-    return preset ? preset.label : 'Seleccionar rango';
+    const displayText = preset ? preset.label : 'Seleccionar rango';
+    console.log('📝 DateRangePicker - getDisplayText:', { selectedRange, preset, displayText });
+    return displayText;
   };
 
   return (
