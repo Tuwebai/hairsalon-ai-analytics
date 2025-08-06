@@ -648,7 +648,7 @@ body {
   box-shadow: var(--shadow-sm);
 }
 
-/* Theme Toggle Button */
+/* Theme Toggle Button - Premium */
 .theme-toggle {
   background: var(--gradient-secondary);
   border: none;
@@ -660,10 +660,12 @@ body {
   justify-content: center;
   color: white;
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .theme-toggle::before {
@@ -677,8 +679,9 @@ body {
 }
 
 .theme-toggle:hover {
-  transform: scale(1.05);
-  box-shadow: var(--shadow-lg);
+  transform: scale(1.08);
+  box-shadow: var(--shadow-xl);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .theme-toggle:hover::before {
@@ -686,7 +689,8 @@ body {
 }
 
 .theme-toggle:active {
-  transform: scale(0.95);
+  transform: scale(0.92);
+  box-shadow: var(--shadow-md);
 }
 
 /* Ripple effect for theme toggle */

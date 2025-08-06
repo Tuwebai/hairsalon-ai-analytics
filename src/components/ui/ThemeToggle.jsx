@@ -13,10 +13,10 @@ const ThemeToggle = ({ className = '' }) => {
     setIsAnimating(true);
     toggleTheme();
     
-    // Reset animation state immediately
+    // Reset animation state immediately for faster response
     setTimeout(() => {
       setIsAnimating(false);
-    }, 100);
+    }, 80);
   };
 
   const createRipple = (event) => {
@@ -42,24 +42,24 @@ const ThemeToggle = ({ className = '' }) => {
   const iconVariants = {
     initial: { 
       opacity: 0, 
-      rotate: isDark ? 45 : -45, 
-      scale: 0.8 
+      rotate: isDark ? 30 : -30, 
+      scale: 0.85 
     },
     animate: { 
       opacity: 1, 
       rotate: 0, 
       scale: 1,
       transition: {
-        duration: 0.15,
+        duration: 0.12,
         ease: [0.4, 0, 0.2, 1]
       }
     },
     exit: { 
       opacity: 0, 
-      rotate: isDark ? -45 : 45, 
-      scale: 0.8,
+      rotate: isDark ? -30 : 30, 
+      scale: 0.85,
       transition: {
-        duration: 0.1,
+        duration: 0.08,
         ease: [0.4, 0, 0.2, 1]
       }
     }
@@ -72,9 +72,16 @@ const ThemeToggle = ({ className = '' }) => {
       className={`theme-toggle ${className}`}
       aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
       title={`Switch to ${isDark ? 'light' : 'dark'} mode`}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-      transition={{ duration: 0.2 }}
+      whileHover={{ 
+        scale: 1.08,
+        rotate: 5,
+        transition: { duration: 0.15 }
+      }}
+      whileTap={{ 
+        scale: 0.92,
+        transition: { duration: 0.1 }
+      }}
+      transition={{ duration: 0.15 }}
     >
       <div className="relative w-5 h-5">
         <AnimatePresence mode="wait">

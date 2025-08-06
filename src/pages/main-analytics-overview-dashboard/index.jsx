@@ -10,6 +10,7 @@ import RecentInteractions from './components/RecentInteractions';
 import ExportControls from './components/ExportControls';
 import NotificationToast from '../../components/ui/NotificationToast';
 import ParticleBackground from '../../components/ui/ParticleBackground';
+import DemoModeIndicator from '../../components/ui/DemoModeIndicator';
 import { useAuth } from '../../contexts/AuthContext';
 import Icon from '../../components/AppIcon';
 
@@ -311,6 +312,7 @@ const MainAnalyticsOverviewDashboard = () => {
   return (
     <div className="min-h-screen relative" style={{ background: 'var(--bg-primary)' }}>
       <ParticleBackground particleCount={15} />
+      <DemoModeIndicator />
       <NavigationBar currentUser={currentUser} />
       
       <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-8">

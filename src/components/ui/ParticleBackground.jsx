@@ -8,17 +8,17 @@ const ParticleBackground = ({ particleCount = 20, className = '' }) => {
     id: i,
     x: Math.random() * 100,
     y: Math.random() * 100,
-    size: Math.random() * 3 + 1,
-    duration: Math.random() * 20 + 10,
-    delay: Math.random() * 5
+    size: Math.random() * 2 + 0.5,
+    duration: Math.random() * 30 + 20,
+    delay: Math.random() * 10
   }));
 
   const particleVariants = {
     animate: (custom) => ({
-      x: [custom.x, custom.x + (Math.random() - 0.5) * 50],
-      y: [custom.y, custom.y + (Math.random() - 0.5) * 50],
-      opacity: [0.3, 0.8, 0.3],
-      scale: [0.8, 1.2, 0.8],
+      x: [custom.x, custom.x + (Math.random() - 0.5) * 30],
+      y: [custom.y, custom.y + (Math.random() - 0.5) * 30],
+      opacity: [0.1, 0.4, 0.1],
+      scale: [0.6, 1.1, 0.6],
       transition: {
         duration: custom.duration,
         delay: custom.delay,
@@ -43,8 +43,8 @@ const ParticleBackground = ({ particleCount = 20, className = '' }) => {
             top: `${particle.y}%`,
             width: `${particle.size}px`,
             height: `${particle.size}px`,
-            background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1))',
-            filter: 'blur(1px)'
+            background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(139, 92, 246, 0.08))',
+            filter: 'blur(0.5px)'
           }}
           custom={particle}
           variants={particleVariants}
